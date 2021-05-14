@@ -55,6 +55,7 @@ class VideoLooper:
         # Load other configuration values.
         self._osd = self._config.getboolean('video_looper', 'osd')
         self._is_random = self._config.getboolean('video_looper', 'is_random')
+        self._resume_playlist = self._config.getboolean('video_looper', 'resume_playlist') 
         self._keyboard_control = self._config.getboolean('video_looper', 'keyboard_control')
         # Get seconds for countdown from config
         self._countdown_time = self._config.getint('video_looper', 'countdown_time')
@@ -354,7 +355,7 @@ class VideoLooper:
         playlist = self._build_playlist()
         self._prepare_to_run_playlist(playlist)
         self._set_hardware_volume()
-        movie = playlist.get_next(self._is_random)
+        movie = playlist.get_next(self._is_random, self._resume_playlist)
         # Main loop to play videos in the playlist and listen for file changes.
         while self._running:
             # Load and play a new movie if nothing is playing.
@@ -363,10 +364,10 @@ class VideoLooper:
 
                     if movie.playcount >= movie.repeats:
                         movie.clear_playcount()
-                        movie = playlist.get_next(self._is_random)
+                        movie = playlist.get_next(self._is_random, self._resume_playlist)
                     elif self._player.can_loop_count() and movie.playcount > 0:
                         movie.clear_playcount()
-                        movie = playlist.get_next(self._is_random)
+                        movie = playlist.get_next(self._is_random, self._resume_playlist)
 
                     movie.was_played()
 
@@ -399,7 +400,7 @@ class VideoLooper:
                 playlist = self._build_playlist()
                 self._prepare_to_run_playlist(playlist)
                 self._set_hardware_volume()
-                movie = playlist.get_next(self._is_random)
+                movie = playlist.get_next(self._is_random, self._resume_playlist)
 
             # Give the CPU some time to do other tasks. low values increase "responsiveness to changes" and reduce the pause between files
             # but increase CPU usage
