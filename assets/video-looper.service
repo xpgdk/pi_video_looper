@@ -1,0 +1,10 @@
+[Unit]
+Description=Video Looper
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -u -m Adafruit_Video_Looper.video_looper
+Restart=on-failure
+
+[Install]
+WantedBy=app.slice

@@ -1,10 +1,9 @@
 #!/bin/sh
 
-# Make sure script is run as root.
-if [ "$(id -u)" != "0" ]; then
-  echo "Must be run as root with sudo! Try: sudo ./reload.sh"
+# Make sure script is NOT run as root.
+if [ "$(id -u)" = "0" ]; then
+  echo "Must NOT be run as root!"
   exit 1
 fi
 
-# reload settings by restarting the video_looper
-supervisorctl restart video_looper
+systemctl --user restart video-looper.service
