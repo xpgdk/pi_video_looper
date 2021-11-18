@@ -12,24 +12,7 @@ fi
 
 echo "Installing dependencies..."
 echo "=========================="
-apt update && apt -y install python3 python3-pip python3-pygame supervisor omxplayer ntfs-3g exfat-fuse
-
-if [ "$*" != "no_hello_video" ]
-then
-	echo "Installing hello_video..."
-	echo "========================="
-	apt -y install git build-essential python3-dev
-	git clone https://github.com/adafruit/pi_hello_video
-	cd pi_hello_video
-	./rebuild.sh
-	cd hello_video
-	make install
-	cd ../..
-	rm -rf pi_hello_video
-else
-    echo "hello_video was not installed"
-    echo "=========================="
-fi
+apt update && apt -y install python3-vlc python3 python3-pip python3-pygame supervisor omxplayer ntfs-3g exfat-fuse
 
 echo "Installing video_looper program..."
 echo "=================================="
@@ -52,4 +35,7 @@ cp ./assets/video_looper.conf /etc/supervisor/conf.d/
 
 service supervisor restart
 
+systemctl disable lightdm.service
+
 echo "Finished!"
+echo "Be aware that the graphical user interface of your PI has been disabled, as it conflicts with hardware accelerated playback"
